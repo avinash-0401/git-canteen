@@ -237,10 +237,9 @@ module.exports = async (req, res) => {
 
     // USER: Get their orders
     if (req.method === 'GET' && pathname === '/api/user/orders') {
-        const userId = url.searchParams.get('user_id');
-        if (!userId) return sendJson(400, { error: 'Missing user_id' });
-        const user = db.users.find(u => u.user_id === userId);
-        const userOrders = db.orders.filter(o => o.user_id === userId || (user && o.customer_phone === user.phone));
+        const phone = url.searchParams.get('phone');
+        if (!phone) return sendJson(400, { error: 'Missing phone number' });
+        const userOrders = db.orders.filter(o => o.customer_phone === phone);
         return sendJson(200, userOrders);
     }
 

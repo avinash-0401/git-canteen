@@ -366,24 +366,23 @@ document.getElementById('authLoginForm').addEventListener('submit', async (e) =>
     msg.style.display = 'none';
 
     try {
-        const res = await fetch(`${API_BASE}/login`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ phone, password })
-        });
+        // Fetch users from local storage
+        let users = JSON.parse(localStorage.getItem('canteenUsers')) || [];
+        const user = users.find(u => u.phone === phone && u.password === password);
 
-        const data = await res.json();
-        if (res.ok) {
-            localStorage.setItem('canteenUser', JSON.stringify(data.user));
+        if (user) {
+            // Remove password before saving active session
+            const sessionUser = { user_id: user.user_id, name: user.name, phone: user.phone };
+            localStorage.setItem('canteenUser', JSON.stringify(sessionUser));
             closeAuthModal();
             renderAuthUI();
-            alert(`Welcome back, ${data.user.name}!`);
+            alert(`Welcome back, ${user.name}!`);
         } else {
-            msg.innerText = data.error || "Login failed.";
+            msg.innerText = "Invalid phone number or password.";
             msg.style.display = 'block';
         }
     } catch (err) {
-        msg.innerText = "Network error. Server might be down.";
+        msg.innerText = "Local storage error.";
         msg.style.display = 'block';
     } finally {
         btn.disabled = false;
@@ -407,24 +406,32 @@ document.getElementById('authRegisterForm').addEventListener('submit', async (e)
     msg.style.display = 'none';
 
     try {
-        const res = await fetch(`${API_BASE}/register`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ name, phone, password })
-        });
+        let users = JSON.parse(localStorage.getItem('canteenUsers')) || [];
 
-        const data = await res.json();
-        if (res.ok) {
-            localStorage.setItem('canteenUser', JSON.stringify(data.user));
+        if (users.find(u => u.phone === phone)) {
+            msg.innerText = "User with this phone number already exists.";
+            msg.style.display = 'block';
+        } else {
+            const newUser = {
+                user_id: `user_${Date.now()}`,
+                name: name,
+                phone: phone,
+                password: password // Storing locally
+            };
+
+            users.push(newUser);
+            localStorage.setItem('canteenUsers', JSON.stringify(users));
+
+            // Set active session
+            const sessionUser = { user_id: newUser.user_id, name: newUser.name, phone: newUser.phone };
+            localStorage.setItem('canteenUser', JSON.stringify(sessionUser));
+
             closeAuthModal();
             renderAuthUI();
-            alert(`Account created! Welcome, ${data.user.name}!`);
-        } else {
-            msg.innerText = data.error || "Registration failed.";
-            msg.style.display = 'block';
+            alert(`Account created! Welcome, ${newUser.name}!`);
         }
     } catch (err) {
-        msg.innerText = "Network error. Server might be down.";
+        msg.innerText = "Local storage error.";
         msg.style.display = 'block';
     } finally {
         btn.disabled = false;
@@ -493,7 +500,7 @@ window.openMyOrders = async (e) => {
     container.innerHTML = '<p style="text-align: center; color: #666;">Loading orders...</p>';
 
     try {
-        const res = await fetch(`${API_BASE}/user/orders?user_id=${user.user_id}`);
+        const res = await fetch(`${API_BASE}/user/orders?phone=${user.phone}`);
         const orders = await res.json();
 
         if (orders.length === 0) {
