@@ -43,11 +43,17 @@ if (!fs.existsSync(DB_FILE)) {
 }
 
 function saveDb() {
-    fs.writeFileSync(DB_FILE, JSON.stringify(db, null, 2));
+    try {
+        fs.writeFileSync(DB_FILE, JSON.stringify(db, null, 2));
+    } catch (e) {
+        // Vercel serverless functions are read-only except for /tmp. 
+        // We catch this so the app doesn't crash on Vercel.
+        // Data will just live in memory until the function goes to sleep.
+    }
 }
 
-// Basic router
-const server = http.createServer((req, res) => {
+// Basic router exported for Vercel Serveless
+module.exports = async (req, res) => {
     // CORS Headers
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
@@ -284,8 +290,4 @@ const server = http.createServer((req, res) => {
     // Fallback
     res.writeHead(404);
     res.end('Not Found');
-});
-
-server.listen(PORT, () => {
-    console.log(`Vanilla Node.js API Server running on port ${PORT}`);
-});
+};
