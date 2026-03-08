@@ -1,0 +1,356 @@
+{
+  "items": [
+    {
+      "id": 2,
+      "name": "Paneer Paratha",
+      "category": "Food & Snacks",
+      "description": "Filling campus favorite",
+      "price": 40,
+      "is_available": 1
+    },
+    {
+      "id": 3,
+      "name": "Veg Patties",
+      "category": "Food & Snacks",
+      "description": "Crispy baked snack",
+      "price": 15,
+      "is_available": 1
+    },
+    {
+      "id": 4,
+      "name": "Cutting Chai",
+      "category": "Beverages",
+      "description": "Classic student fuel",
+      "price": 10,
+      "is_available": 1
+    },
+    {
+      "id": 5,
+      "name": "Coffee",
+      "category": "Beverages",
+      "description": "Hot and energizing",
+      "price": 15,
+      "is_available": 1
+    },
+    {
+      "id": 6,
+      "name": "Cream Cakes",
+      "category": "Bakery & Desserts",
+      "description": "Sweet treat for breaks",
+      "price": 25,
+      "is_available": 1
+    }
+  ],
+  "orders": [
+    {
+      "id": 1772620870732,
+      "customer_name": "Test Student",
+      "customer_phone": "9876543210",
+      "total_amount": 70,
+      "payment_method": "UPI",
+      "payment_status": "Pending",
+      "order_status": "Completed",
+      "created_at": "2026-03-04T10:41:10.732Z",
+      "items": [
+        {
+          "name": "Aloo Paratha",
+          "quantity": 1,
+          "price": 30
+        },
+        {
+          "name": "Paneer Paratha",
+          "quantity": 1,
+          "price": 40
+        }
+      ]
+    },
+    {
+      "id": 1772621304635,
+      "customer_name": "Avinash Yadav",
+      "customer_phone": "8094183267",
+      "total_amount": 30,
+      "payment_method": "UPI",
+      "payment_status": "Paid",
+      "order_status": "Completed",
+      "created_at": "2026-03-04T10:48:24.635Z",
+      "items": [
+        {
+          "id": 1,
+          "name": "Aloo Paratha",
+          "price": 30,
+          "quantity": 1
+        }
+      ]
+    },
+    {
+      "id": 1772621439833,
+      "customer_name": "Avinash Yadav",
+      "customer_phone": "8094183267",
+      "total_amount": 40,
+      "payment_method": "Cash",
+      "payment_status": "Pending",
+      "order_status": "Completed",
+      "created_at": "2026-03-04T10:50:39.833Z",
+      "items": [
+        {
+          "id": 6,
+          "name": "Cream Cakes",
+          "price": 25,
+          "quantity": 1
+        },
+        {
+          "id": 5,
+          "name": "Coffee",
+          "price": 15,
+          "quantity": 1
+        }
+      ]
+    },
+    {
+      "id": 1772622113505,
+      "customer_name": "Avinash Yadav",
+      "customer_phone": "8094183267",
+      "total_amount": 30,
+      "payment_method": "UPI",
+      "payment_status": "Paid",
+      "order_status": "Completed",
+      "created_at": "2026-03-04T11:01:53.505Z",
+      "items": [
+        {
+          "id": 3,
+          "name": "Veg Patties",
+          "price": 15,
+          "quantity": 1
+        },
+        {
+          "id": 5,
+          "name": "Coffee",
+          "price": 15,
+          "quantity": 1
+        }
+      ]
+    },
+    {
+      "id": 1772622288040,
+      "customer_name": "Avinash Yadav",
+      "customer_phone": "8094183267",
+      "total_amount": 40,
+      "payment_method": "Cash",
+      "payment_status": "Pending",
+      "order_status": "Completed",
+      "created_at": "2026-03-04T11:04:48.040Z",
+      "items": [
+        {
+          "id": 2,
+          "name": "Paneer Paratha",
+          "price": 40,
+          "quantity": 1
+        }
+      ]
+    },
+    {
+      "id": 1772623008118,
+      "customer_name": "Avinash Yadav",
+      "customer_phone": "8094183267",
+      "total_amount": 10,
+      "payment_method": "UPI",
+      "payment_status": "Paid",
+      "order_status": "Completed",
+      "created_at": "2026-03-04T11:16:48.118Z",
+      "items": [
+        {
+          "id": 4,
+          "name": "Cutting Chai",
+          "price": 10,
+          "quantity": 1
+        }
+      ]
+    },
+    {
+      "id": 1772623025365,
+      "customer_name": "Avinash Yadav",
+      "customer_phone": "8094183267",
+      "total_amount": 10,
+      "payment_method": "UPI",
+      "payment_status": "Paid",
+      "order_status": "Completed",
+      "created_at": "2026-03-04T11:17:05.365Z",
+      "items": [
+        {
+          "id": 4,
+          "name": "Cutting Chai",
+          "price": 10,
+          "quantity": 1
+        }
+      ]
+    },
+    {
+      "id": 1772623492532,
+      "user_id": null,
+      "customer_name": "Avinash Yadav",
+      "customer_phone": "8094183267",
+      "total_amount": 40,
+      "payment_method": "UPI",
+      "payment_status": "Paid",
+      "order_status": "Completed",
+      "created_at": "2026-03-04T11:24:52.533Z",
+      "items": [
+        {
+          "id": 2,
+          "name": "Paneer Paratha",
+          "price": 40,
+          "quantity": 1
+        }
+      ]
+    },
+    {
+      "id": 1772991270431,
+      "user_id": null,
+      "customer_name": "Avinash Yadav",
+      "customer_phone": "8094183267",
+      "total_amount": 10,
+      "payment_method": "UPI",
+      "payment_status": "Paid",
+      "order_status": "Completed",
+      "created_at": "2026-03-08T17:34:30.431Z",
+      "items": [
+        {
+          "id": 4,
+          "name": "Cutting Chai",
+          "price": 10,
+          "quantity": 1
+        }
+      ]
+    },
+    {
+      "id": 1772991433221,
+      "user_id": null,
+      "customer_name": "Avinash Yadav",
+      "customer_phone": "8094183267",
+      "total_amount": 40,
+      "payment_method": "UPI",
+      "payment_status": "Paid",
+      "order_status": "Completed",
+      "created_at": "2026-03-08T17:37:13.221Z",
+      "items": [
+        {
+          "id": 2,
+          "name": "Paneer Paratha",
+          "price": 40,
+          "quantity": 1
+        }
+      ]
+    },
+    {
+      "id": 1772991507247,
+      "user_id": null,
+      "customer_name": "Avinash Yadav",
+      "customer_phone": "8094183267",
+      "total_amount": 55,
+      "payment_method": "UPI",
+      "payment_status": "Paid",
+      "order_status": "Completed",
+      "created_at": "2026-03-08T17:38:27.247Z",
+      "items": [
+        {
+          "id": 2,
+          "name": "Paneer Paratha",
+          "price": 40,
+          "quantity": 1
+        },
+        {
+          "id": 5,
+          "name": "Coffee",
+          "price": 15,
+          "quantity": 1
+        }
+      ]
+    },
+    {
+      "id": 1772991909405,
+      "user_id": null,
+      "customer_name": "Avinash Yadav",
+      "customer_phone": "8094183267",
+      "total_amount": 80,
+      "payment_method": "Online",
+      "payment_status": "Paid",
+      "order_status": "Completed",
+      "created_at": "2026-03-08T17:45:09.405Z",
+      "items": [
+        {
+          "id": 2,
+          "name": "Paneer Paratha",
+          "price": 40,
+          "quantity": 1
+        },
+        {
+          "id": 6,
+          "name": "Cream Cakes",
+          "price": 25,
+          "quantity": 1
+        },
+        {
+          "id": 5,
+          "name": "Coffee",
+          "price": 15,
+          "quantity": 1
+        }
+      ]
+    },
+    {
+      "id": 1772992311411,
+      "user_id": null,
+      "customer_name": "Avinash Yadav",
+      "customer_phone": "8094183267",
+      "total_amount": 80,
+      "payment_method": "Online",
+      "payment_status": "Paid",
+      "order_status": "Completed",
+      "created_at": "2026-03-08T17:51:51.411Z",
+      "items": [
+        {
+          "id": 2,
+          "name": "Paneer Paratha",
+          "price": 40,
+          "quantity": 1
+        },
+        {
+          "id": 4,
+          "name": "Cutting Chai",
+          "price": 10,
+          "quantity": 1
+        },
+        {
+          "id": 3,
+          "name": "Veg Patties",
+          "price": 15,
+          "quantity": 2
+        }
+      ]
+    },
+    {
+      "id": 1772992332851,
+      "user_id": null,
+      "customer_name": "Avinash Yadav",
+      "customer_phone": "8094183267",
+      "total_amount": 40,
+      "payment_method": "Online",
+      "payment_status": "Paid",
+      "order_status": "Completed",
+      "created_at": "2026-03-08T17:52:12.851Z",
+      "items": [
+        {
+          "id": 2,
+          "name": "Paneer Paratha",
+          "price": 40,
+          "quantity": 1
+        }
+      ]
+    }
+  ],
+  "settings": {
+    "is_canteen_open": "true"
+  },
+  "users": [],
+  "otps": {}
+}

@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GIT Canteen - Chef Dashboard</title>
+    <style>
+        :root {
+            --primary-red: #C62828;
+            --dark-brown: #4E342E;
+        }
+
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: #f3f4f6;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+        }
+
+        .dashboard-header {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        h1 {
+            margin: 0;
+            color: var(--dark-brown);
+        }
+
+        .orders-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .order-card {
+            background: white;
+            border-radius: 8px;
+            padding: 16px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            border-top: 4px solid #ccc;
+        }
+
+        .order-card.status-Pending {
+            border-top-color: #F59E0B;
+        }
+
+        .order-card.status-Preparing {
+            border-top-color: #3B82F6;
+        }
+
+        .order-card.status-Ready {
+            border-top-color: #10B981;
+        }
+
+        .order-header {
+            display: flex;
+            justify-content: space-between;
+            font-weight: bold;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+
+        .status-badge {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.8em;
+            color: white;
+        }
+
+        .status-Pending .status-badge {
+            background: #F59E0B;
+        }
+
+        .status-Preparing .status-badge {
+            background: #3B82F6;
+        }
+
+        .status-Ready .status-badge {
+            background: #10B981;
+        }
+
+        .items-list {
+            list-style: none;
+            padding: 0;
+            margin: 10px 0;
+            border-top: 1px solid #eee;
+            border-bottom: 1px solid #eee;
+            padding: 10px 0;
+        }
+
+        .items-list li {
+            margin-bottom: 5px;
+        }
+
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-radius: 4px;
+            font-weight: bold;
+            cursor: pointer;
+            text-align: center;
+            margin-top: 10px;
+        }
+
+        .btn-advance {
+            background: var(--primary-red);
+            color: white;
+        }
+
+        .btn-complete {
+            background: #10B981;
+            color: white;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="dashboard-header">
+        <h1>Chef Dashboard - Live Orders</h1>
+        <a href="admin.html" style="color: var(--primary-red); font-weight: bold; line-height: 2;">Back to Admin</a>
+    </div>
+
+    <div class="orders-grid" id="ordersContainer">
+        <!-- Orders injected here -->
+        Loading live orders...
+    </div>
+
+    <script>
+        const API_BASE = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+            ? 'http://localhost:3000/api'
+            : '/api';
+
+        async function fetchOrders() {
+            try {
+                const res = await fetch(`${API_BASE}/chef/orders`);
+                const orders = await res.json();
+
+                const container = document.getElementById('ordersContainer');
+                if (orders.length === 0) {
+                    container.innerHTML = '<p>No active orders.</p>';
+                    return;
+                }
+
+                container.innerHTML = '';
+                orders.forEach(order => {
+                    let btnHtml = '';
+                    if (order.order_status === 'Pending') {
+                        btnHtml = `<button class="btn btn-advance" onclick="updateStatus(${order.id}, 'Preparing')">Start Preparing</button>`;
+                    } else if (order.order_status === 'Preparing') {
+                        btnHtml = `<button class="btn btn-complete" onclick="updateStatus(${order.id}, 'Ready')">Mark as Ready</button>`;
+                    } else if (order.order_status === 'Ready') {
+                        btnHtml = `<button class="btn btn-complete" style="background:#4E342E" onclick="updateStatus(${order.id}, 'Completed')">Hand Out & Close</button>`;
+                    }
+
+                    let itemsHtml = order.items ? order.items.map(i => `<li><strong>${i.quantity}x</strong> ${i.name || i.item_name}</li>`).join('') : '';
+
+                    container.innerHTML += `
+                        <div class="order-card status-${order.order_status}">
+                            <div class="order-header">
+                                <span>Order #${order.id}</span>
+                                <span class="status-badge">${order.order_status}</span>
+                            </div>
+                            <div style="font-size: 0.9em; color: #666; margin-bottom: 10px;">
+                                ${order.customer_name} (${order.customer_phone})
+                            </div>
+                            <ul class="items-list">
+                                ${itemsHtml}
+                            </ul>
+                            ${btnHtml}
+                        </div>
+                    `;
+                });
+            } catch (err) {
+                console.error("Failed to fetch orders", err);
+            }
+        }
+
+        async function updateStatus(id, newStatus) {
+            await fetch(`${API_BASE}/chef/orders/${id}/status`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ order_status: newStatus })
+            });
+            fetchOrders();
+        }
+
+        // Initial fetch and poll every 5s
+        fetchOrders();
+        setInterval(fetchOrders, 5000);
+    </script>
+</body>
+
+</html>

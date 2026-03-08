@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GIT College Canteen | Sitapura, Jaipur</title>
+    <meta name="description"
+        content="A student-focused campus canteen serving affordable everyday food and snacks inside Global Institute of Technology, Sitapura, Jaipur.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container nav-container">
+            <a href="#" class="logo">
+                <span class="logo-icon">☕</span> GIT Canteen
+            </a>
+            <div class="nav-links" id="navLinksAuth">
+                <a href="#about">About</a>
+                <a href="#menu">Menu</a>
+                <a href="#experience">Experience</a>
+                <a href="#location">Location</a>
+                <a href="#" onclick="openAuthModal(event)" style="color: var(--primary-red); font-weight: 700;">Login /
+                    Sign Up</a>
+            </div>
+            <button class="mobile-toggle" aria-label="Toggle Navigation">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="3" y1="12" x2="21" y2="12"></line>
+                    <line x1="3" y1="6" x2="21" y2="6"></line>
+                    <line x1="3" y1="18" x2="21" y2="18"></line>
+                </svg>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Mobile Menu Overlay -->
+    <div class="mobile-menu">
+        <a href="#about">About</a>
+        <a href="#menu">Menu</a>
+        <a href="#experience">Experience</a>
+        <a href="#location">Location</a>
+        <a href="#"
+            onclick="openTrackOrder(event); document.querySelector('.mobile-menu').classList.remove('active');">Track
+            Order</a>
+    </div>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="hero-bg"></div>
+        <div class="container hero-container">
+            <div class="hero-content reveal">
+                <div class="rating-badge">
+                    <span class="star">⭐</span> 3.6 Rating (142 Google Reviews)
+                </div>
+                <h1>Welcome to<br><span class="highlight">GIT College Canteen</span><br><span class="hindi-text">(जी आई
+                        टी कॉलेज कैंटीन)</span></h1>
+                <p class="hero-subtitle">Your everyday campus hangout spot for quick, affordable meals and snacks right
+                    inside the Global Institute of Technology.</p>
+                <div class="hero-actions">
+                    <a href="#menu" class="btn btn-primary">View Menu</a>
+                    <a href="#location" class="btn btn-secondary">Find Us</a>
+                </div>
+                <div class="location-trust">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                        <circle cx="12" cy="10" r="3"></circle>
+                    </svg>
+                    <span>Sitapura Industrial Area, Jaipur</span>
+                </div>
+            </div>
+            <div class="hero-image reveal">
+                <img src="assets/git_campus_new.jpg" alt="GIT Campus Entrance">
+            </div>
+        </div>
+    </section>
+
+    <!-- Features / About Section -->
+    <section class="about" id="about">
+        <div class="container">
+            <div class="section-header reveal">
+                <h2>A Functional Space For <span class="highlight">Students</span></h2>
+                <p>We focus on what matters between classes: good food, quick service, and a place to relax with
+                    friends.</p>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card reveal">
+                    <img src="assets/serving_counter_1772615845564.png" alt="Serving Counter">
+                    <h3>Dedicated Serving Counter</h3>
+                    <p>Streamlined for quick service so you can grab your food and get back to your studies or hang out.
+                    </p>
+                </div>
+                <div class="feature-card reveal" style="transition-delay: 100ms;">
+                    <img src="assets/kitchen_area_1772615880348.png" alt="Kitchen Prep Area">
+                    <h3>Fresh Preparation</h3>
+                    <p>Clean and active kitchen area preparing your daily meals and baked snacks with care.</p>
+                </div>
+                <div class="feature-card reveal" style="transition-delay: 200ms;">
+                    <img src="assets/dining_hall_1772615860888.png" alt="Dining Hall">
+                    <h3>Spacious Seating</h3>
+                    <p>Large indoor dining hall with plenty of wooden benches for groups and solo students alike.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Menu Offerings -->
+    <section class="menu-section" id="menu">
+        <div class="container">
+            <div class="section-header reveal">
+                <h2>Everyday <span class="highlight">Canteen Favorites</span></h2>
+                <p>Simple, practical, and affordable items tailored for the student budget.</p>
+            </div>
+
+            <div class="menu-categories reveal" id="dynamic-menu-container">
+                <!-- Items will be injected here via script.js -->
+                <div style="text-align: center; width: 100%; padding: 40px; color: var(--text-muted);">
+                    Loading menu items...
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Floating Cart Button -->
+    <button class="cart-btn" id="cartBtn" aria-label="View Cart">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="9" cy="21" r="1"></circle>
+            <circle cx="20" cy="21" r="1"></circle>
+            <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+        </svg>
+        <span class="cart-count badge" id="cartCount">0</span>
+    </button>
+
+    <!-- Checkout Modal -->
+    <div class="checkout-modal" id="checkoutModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Your Order</h2>
+                <button class="close-modal" id="closeModalBtn">&times;</button>
+            </div>
+            <div class="cart-items" id="cartItemsContainer">
+                <!-- Cart items injected here -->
+            </div>
+            <div class="cart-total">
+                <strong>Total:</strong>
+                <span id="cartTotalValue">₹0</span>
+            </div>
+            <form id="checkoutForm" class="checkout-form">
+                <div class="form-group">
+                    <label>Name</label>
+                    <input type="text" id="customerName" required placeholder="Enter your name">
+                </div>
+                <div class="form-group">
+                    <label>Phone Number</label>
+                    <input type="tel" id="customerPhone" required pattern="[0-9]{10}" placeholder="10-digit number">
+                </div>
+                <div class="form-group" style="display: none;">
+                    <label>Payment Method</label>
+                    <select id="paymentMethod">
+                        <option value="Online">Online via MockPay</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center;">
+                    Proceed to Payment
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Receipt Modal -->
+    <div class="checkout-modal" id="receiptModal">
+        <div class="modal-content glass-effect">
+            <div class="modal-header border-b">
+                <h2 class="gradient-text">Order Receipt</h2>
+                <button class="close-modal" onclick="closeReceipt()">&times;</button>
+            </div>
+            <div id="receiptContent" style="margin-bottom: 24px; padding-top: 10px;"></div>
+            <button class="btn btn-primary btn-glow" style="width: 100%; justify-content: center;"
+                onclick="openTrackOrder()">Track Order Status</button>
+        </div>
+    </div>
+
+    <!-- Simulated Payment Gateway Modal -->
+    <div class="checkout-modal" id="paymentGatewayModal" style="z-index: 10005;">
+        <div class="modal-content" style="background: #f8fafc; border-top: 6px solid #4ade80;">
+            <div style="text-align: center; margin-bottom: 20px;">
+                <h2 style="color: #0f172a; font-size: 1.5rem;">MockPay Secure Server</h2>
+                <p style="color: #64748b; font-size: 0.9em;">Simulation Environment</p>
+            </div>
+
+            <div
+                style="background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); margin-bottom: 20px;">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 10px; color: #334155;">
+                    <span>Order ID:</span>
+                    <strong id="pgOrderId">...</strong>
+                </div>
+                <div style="display: flex; justify-content: space-between; color: #334155;">
+                    <span>Total Amount:</span>
+                    <strong style="color: #4ade80; font-size: 1.2em;" id="pgAmount">₹0</strong>
+                </div>
+            </div>
+
+            <p style="text-align: center; color: #64748b; font-size: 0.85em; margin-bottom: 20px;">
+                This represents a real 3rd party payment gateway popup (e.g. Razorpay, Stripe) where the user enters
+                card/UPI details.
+            </p>
+
+            <button id="pgSimulateSuccessBtn" class="btn"
+                style="width: 100%; justify-content: center; background: #4ade80; color: white; margin-bottom: 10px;">
+                Simulate Successful Payment
+            </button>
+            <button onclick="document.getElementById('paymentGatewayModal').classList.remove('active')" class="btn"
+                style="width: 100%; justify-content: center; background: #cbd5e1; color: #334155;">
+                Cancel Payment
+            </button>
+        </div>
+    </div>
+
+    </div>
+    </div>
+
+    <!-- Auth Modal (OTP Login / Register) -->
+    <div class="checkout-modal" id="authModal">
+        <div class="modal-content glass-effect">
+            <div class="modal-header border-b">
+                <h2 id="authTitle" class="gradient-text">Welcome to GIT Canteen</h2>
+                <button class="close-modal" onclick="closeAuthModal()">&times;</button>
+            </div>
+
+            <!-- STEP 1: Phone Number -->
+            <form id="authPhoneForm" class="auth-step active-step">
+                <p class="text-muted mb-4">Enter your details to receive an OTP.</p>
+
+                <div class="form-group slide-up">
+                    <label>Full Name</label>
+                    <input type="text" id="authName" required placeholder="Your Name">
+                </div>
+
+                <div class="form-group slide-up" style="animation-delay: 0.1s;">
+                    <label>Phone Number</label>
+                    <input type="tel" id="authPhone" required pattern="[0-9]{10}" placeholder="10-digit number">
+                </div>
+
+                <div id="otpMessage"
+                    style="display:none; color: var(--primary-red); font-weight: 500; text-align: center; margin-bottom: 15px;"
+                    class="slide-up">
+                    <span class="loading-spinner"></span> Sending OTP...
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-glow slide-up" id="authSendOtpBtn"
+                    style="width: 100%; justify-content: center; animation-delay: 0.2s;">
+                    Get OTP
+                </button>
+            </form>
+
+            <!-- STEP 2: Verify OTP -->
+            <form id="authVerifyForm" class="auth-step" style="display: none;">
+                <p class="text-muted mb-4 text-center">We've sent a 4-digit code to <br><strong id="verifyingPhoneLabel"
+                        style="color:var(--dark-brown);"></strong></p>
+
+                <div class="otp-inputs mt-4 mb-4">
+                    <input type="text" class="otp-digit" maxlength="1" id="otp1" required>
+                    <input type="text" class="otp-digit" maxlength="1" id="otp2" required>
+                    <input type="text" class="otp-digit" maxlength="1" id="otp3" required>
+                    <input type="text" class="otp-digit" maxlength="1" id="otp4" required>
+                </div>
+
+                <div style="text-align: center; margin-bottom: 20px;">
+                    <a href="#" onclick="editPhoneNumber(event)"
+                        style="color: var(--primary-red); font-size: 0.9em; text-decoration: underline;">Change Phone
+                        Number</a>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-glow" id="authVerifyBtn"
+                    style="width: 100%; justify-content: center;">
+                    Verify & Login
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- My Orders Modal -->
+    <div class="checkout-modal" id="myOrdersModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>My Orders</h2>
+                <button class="close-modal" onclick="closeMyOrders()">&times;</button>
+            </div>
+            <div id="myOrdersList" style="max-height: 400px; overflow-y: auto;">
+                <!-- Orders injected here -->
+                <p style="text-align: center; color: #666;">Loading orders...</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Dining Experience -->
+    <section class="experience" id="experience">
+        <div class="container">
+            <div class="experience-grid">
+                <div class="experience-content reveal">
+                    <h2>More Than Just <span class="highlight">Food</span></h2>
+                    <p class="lead">The GIT Canteen is the heartbeat of student life—where friendships are formed
+                        and project ideas are born.</p>
+                    <ul class="experience-list">
+                        <li>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                                <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                            </svg>
+                            <div>
+                                <strong>Quick Service</strong>
+                                <span>Get your food fast to make the most of your time between classes.</span>
+                            </div>
+                        </li>
+                        <li>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                                <circle cx="9" cy="7" r="4"></circle>
+                                <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                            </svg>
+                            <div>
+                                <strong>Casual Social Environment</strong>
+                                <span>A relaxed setting designed for students to interact and unwind.</span>
+                            </div>
+                        </li>
+                        <li>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                                <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                            </svg>
+                            <div>
+                                <strong>On-Campus Convenience</strong>
+                                <span>No need to leave the college premises for a fulfilling meal.</span>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="experience-gallery reveal">
+                    <img src="assets/dining_hall_1772615860888.png" alt="Students in Dining Hall" class="main-exp-img">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer / Location -->
+    <footer class="footer" id="location">
+        <div class="container footer-container">
+            <div class="footer-info reveal">
+                <a href="#" class="logo footer-logo">
+                    <span class="logo-icon">☕</span> GIT Canteen
+                </a>
+                <p>The go-to student hangout space inside the Global Institute of Technology campus.</p>
+                <div class="google-rating">
+                    <span class="stars">⭐⭐⭐⭐</span> 3.6 / 5 on Google
+                </div>
+            </div>
+            <div class="footer-address reveal">
+                <h3>Location</h3>
+                <address>
+                    <strong>GIT College Canteen</strong><br>
+                    Inside Global Institute of Technology campus<br>
+                    Sitapura Industrial Area<br>
+                    Jaipur, Rajasthan 302022<br>
+                    India
+                </address>
+            </div>
+            <div class="footer-hours reveal">
+                <h3>Hours</h3>
+                <p>Open during regular college working hours to serve students and staff.</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <div class="container">
+                <p>&copy; 2026 GIT College Canteen. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
