@@ -97,21 +97,19 @@ module.exports = async (req, res) => {
 
     // ADMIN: Create item
     if (req.method === 'POST' && pathname === '/api/admin/items') {
-        getBody().then(data => {
-            const newItem = {
-                id: Date.now(),
-                name: data.name,
-                category: data.category,
-                description: data.description,
-                price: parseFloat(data.price),
-                image_url: data.image_url || 'assets/snacks_placeholder.png',
-                is_available: data.is_available !== undefined ? data.is_available : 1
-            };
-            db.items.push(newItem);
-            saveDb();
-            return sendJson(201, { message: 'Item created', id: newItem.id });
-        });
-        return;
+        const data = await getBody();
+        const newItem = {
+            id: Date.now(),
+            name: data.name,
+            category: data.category,
+            description: data.description,
+            price: parseFloat(data.price),
+            image_url: data.image_url || 'assets/snacks_placeholder.png',
+            is_available: data.is_available !== undefined ? data.is_available : 1
+        };
+        db.items.push(newItem);
+        saveDb();
+        return sendJson(201, { message: 'Item created', id: newItem.id });
     }
 
     // ADMIN: Delete item
@@ -126,65 +124,59 @@ module.exports = async (req, res) => {
 
     // PUBLIC: Create order (Pending Payment state)
     if (req.method === 'POST' && pathname === '/api/orders') {
-        getBody().then(data => {
-            const newOrder = {
-                id: Date.now(),
-                user_id: data.user_id || null,
-                customer_name: data.customer_name,
-                customer_phone: data.customer_phone,
-                total_amount: data.total_amount,
-                payment_method: data.payment_method,
-                payment_status: 'Pending',
-                order_status: 'Awaiting Payment',
-                created_at: new Date().toISOString(),
-                items: data.items || []
-            };
-            db.orders.push(newOrder);
-            saveDb();
-            return sendJson(201, { message: 'Order initialized', order_id: newOrder.id });
-        });
-        return;
+        const data = await getBody();
+        const newOrder = {
+            id: Date.now(),
+            user_id: data.user_id || null,
+            customer_name: data.customer_name,
+            customer_phone: data.customer_phone,
+            total_amount: data.total_amount,
+            payment_method: data.payment_method,
+            payment_status: 'Pending',
+            order_status: 'Awaiting Payment',
+            created_at: new Date().toISOString(),
+            items: data.items || []
+        };
+        db.orders.push(newOrder);
+        saveDb();
+        return sendJson(201, { message: 'Order initialized', order_id: newOrder.id });
     }
 
     // POST: /api/create-payment (Simulate Gateway Intent)
     if (req.method === 'POST' && pathname === '/api/create-payment') {
-        getBody().then(data => {
-            const { order_id, amount } = data;
-            if (!order_id) return sendJson(400, { error: 'Order ID is required' });
+        const data = await getBody();
+        const { order_id, amount } = data;
+        if (!order_id) return sendJson(400, { error: 'Order ID is required' });
 
-            // Generate a fake transaction ID like Razorpay's pay_XYZ
-            const transaction_id = `pay_${crypto.randomBytes(8).toString('hex')}`;
+        // Generate a fake transaction ID like Razorpay's pay_XYZ
+        const transaction_id = `pay_${crypto.randomBytes(8).toString('hex')}`;
 
-            return sendJson(200, {
-                transaction_id,
-                amount,
-                gateway: 'MockPay',
-                message: 'Payment intent created successfully'
-            });
+        return sendJson(200, {
+            transaction_id,
+            amount,
+            gateway: 'MockPay',
+            message: 'Payment intent created successfully'
         });
-        return;
     }
 
     // POST: /api/verify-payment (Simulate Gateway Verification)
     if (req.method === 'POST' && pathname === '/api/verify-payment') {
-        getBody().then(data => {
-            const { order_id, transaction_id } = data;
-            if (!order_id || !transaction_id) {
-                return sendJson(400, { error: 'Order ID and Transaction ID required' });
-            }
+        const data = await getBody();
+        const { order_id, transaction_id } = data;
+        if (!order_id || !transaction_id) {
+            return sendJson(400, { error: 'Order ID and Transaction ID required' });
+        }
 
-            const order = db.orders.find(o => o.id.toString() === order_id.toString());
-            if (!order) return sendJson(404, { error: 'Order not found' });
+        const order = db.orders.find(o => o.id.toString() === order_id.toString());
+        if (!order) return sendJson(404, { error: 'Order not found' });
 
-            // Mark as Paid
-            order.payment_status = 'Paid';
-            order.order_status = 'Pending'; // Now it goes to the Chef
-            order.transaction_id = transaction_id;
-            saveDb();
+        // Mark as Paid
+        order.payment_status = 'Paid';
+        order.order_status = 'Pending'; // Now it goes to the Chef
+        order.transaction_id = transaction_id;
+        saveDb();
 
-            return sendJson(200, { message: 'Payment verified successfully', order_id: order.id });
-        });
-        return;
+        return sendJson(200, { message: 'Payment verified successfully', order_id: order.id });
     }
 
     // PUBLIC: Get specific order by ID
@@ -202,49 +194,45 @@ module.exports = async (req, res) => {
 
     // USER: Register
     if (req.method === 'POST' && pathname === '/api/register') {
-        getBody().then(data => {
-            const { name, phone, password } = data;
-            if (!name || !phone || !password) {
-                return sendJson(400, { error: 'Name, phone, and password are required' });
-            }
+        const data = await getBody();
+        const { name, phone, password } = data;
+        if (!name || !phone || !password) {
+            return sendJson(400, { error: 'Name, phone, and password are required' });
+        }
 
-            let user = db.users.find(u => u.phone === phone);
-            if (user) {
-                return sendJson(400, { error: 'User with this phone number already exists' });
-            }
+        let user = db.users.find(u => u.phone === phone);
+        if (user) {
+            return sendJson(400, { error: 'User with this phone number already exists' });
+        }
 
-            user = {
-                user_id: `user_${Date.now()}`,
-                name: name,
-                phone: phone,
-                password: password, // Storing plaintext for mock purposes only
-                created_at: new Date().toISOString()
-            };
-            db.users.push(user);
-            saveDb();
+        user = {
+            user_id: `user_${Date.now()}`,
+            name: name,
+            phone: phone,
+            password: password, // Storing plaintext for mock purposes only
+            created_at: new Date().toISOString()
+        };
+        db.users.push(user);
+        saveDb();
 
-            return sendJson(201, { message: 'Registration successful', user: { user_id: user.user_id, name: user.name, phone: user.phone } });
-        });
-        return;
+        return sendJson(201, { message: 'Registration successful', user: { user_id: user.user_id, name: user.name, phone: user.phone } });
     }
 
     // USER: Login
     if (req.method === 'POST' && pathname === '/api/login') {
-        getBody().then(data => {
-            const { phone, password } = data;
-            if (!phone || !password) {
-                return sendJson(400, { error: 'Phone and password are required' });
-            }
+        const data = await getBody();
+        const { phone, password } = data;
+        if (!phone || !password) {
+            return sendJson(400, { error: 'Phone and password are required' });
+        }
 
-            const user = db.users.find(u => u.phone === phone && u.password === password);
+        const user = db.users.find(u => u.phone === phone && u.password === password);
 
-            if (!user) {
-                return sendJson(401, { error: 'Invalid phone number or password' });
-            }
+        if (!user) {
+            return sendJson(401, { error: 'Invalid phone number or password' });
+        }
 
-            return sendJson(200, { message: 'Login successful', user: { user_id: user.user_id, name: user.name, phone: user.phone } });
-        });
-        return;
+        return sendJson(200, { message: 'Login successful', user: { user_id: user.user_id, name: user.name, phone: user.phone } });
     }
 
     // USER: Get their orders
@@ -265,16 +253,14 @@ module.exports = async (req, res) => {
     // CHEF: Update order status
     if (req.method === 'PUT' && pathname.match(/\/api\/chef\/orders\/\d+\/status/)) {
         const idStr = pathname.split('/')[4];
-        getBody().then(data => {
-            const order = db.orders.find(o => o.id.toString() === idStr);
-            if (order && data.order_status) {
-                order.order_status = data.order_status;
-                saveDb();
-                return sendJson(200, { message: 'Order status updated' });
-            }
-            return sendJson(404, { error: 'Order not found' });
-        });
-        return;
+        const data = await getBody();
+        const order = db.orders.find(o => o.id.toString() === idStr);
+        if (order && data.order_status) {
+            order.order_status = data.order_status;
+            saveDb();
+            return sendJson(200, { message: 'Order status updated' });
+        }
+        return sendJson(404, { error: 'Order not found' });
     }
 
     // Fallback
