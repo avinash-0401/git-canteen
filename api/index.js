@@ -200,57 +200,47 @@ module.exports = async (req, res) => {
         return sendJson(200, db.orders);
     }
 
-    // USER: Send OTP (Mock SMS)
-    if (req.method === 'POST' && pathname === '/api/send-otp') {
+    // USER: Register
+    if (req.method === 'POST' && pathname === '/api/register') {
         getBody().then(data => {
-            const { phone, name } = data;
-            if (!phone) {
-                return sendJson(400, { error: 'Phone number is required' });
+            const { name, phone, password } = data;
+            if (!name || !phone || !password) {
+                return sendJson(400, { error: 'Name, phone, and password are required' });
             }
 
-            // Generate a 4 digit OTP
-            const otp = Math.floor(1000 + Math.random() * 9000).toString();
-            db.otps[phone] = { otp, name };
+            let user = db.users.find(u => u.phone === phone);
+            if (user) {
+                return sendJson(400, { error: 'User with this phone number already exists' });
+            }
+
+            user = {
+                user_id: `user_${Date.now()}`,
+                name: name,
+                phone: phone,
+                password: password, // Storing plaintext for mock purposes only
+                created_at: new Date().toISOString()
+            };
+            db.users.push(user);
             saveDb();
 
-            // Mock sending SMS
-            console.log(`\n\n[MOCK SMS] 📱 Sending OTP to ${phone}: ${otp}\n\n`);
-
-            return sendJson(200, { message: 'OTP sent successfully' });
+            return sendJson(201, { message: 'Registration successful', user: { user_id: user.user_id, name: user.name, phone: user.phone } });
         });
         return;
     }
 
-    // USER: Verify OTP & Login/Register
-    if (req.method === 'POST' && pathname === '/api/verify-otp') {
+    // USER: Login
+    if (req.method === 'POST' && pathname === '/api/login') {
         getBody().then(data => {
-            const { phone, otp } = data;
-            if (!phone || !otp) {
-                return sendJson(400, { error: 'Phone and OTP are required' });
+            const { phone, password } = data;
+            if (!phone || !password) {
+                return sendJson(400, { error: 'Phone and password are required' });
             }
 
-            const storedOtpData = db.otps[phone];
-            if (!storedOtpData || storedOtpData.otp !== otp) {
-                return sendJson(401, { error: 'Invalid or expired OTP' });
-            }
+            const user = db.users.find(u => u.phone === phone && u.password === password);
 
-            // OTP valid, check if user exists
-            let user = db.users.find(u => u.phone === phone);
-
-            // Register if new user
             if (!user) {
-                user = {
-                    user_id: `user_${Date.now()}`,
-                    name: storedOtpData.name || 'New User',
-                    phone: phone,
-                    created_at: new Date().toISOString()
-                };
-                db.users.push(user);
+                return sendJson(401, { error: 'Invalid phone number or password' });
             }
-
-            // Clear OTP (Single use)
-            delete db.otps[phone];
-            saveDb();
 
             return sendJson(200, { message: 'Login successful', user: { user_id: user.user_id, name: user.name, phone: user.phone } });
         });

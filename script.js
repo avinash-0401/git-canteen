@@ -314,8 +314,24 @@ window.openTrackOrder = (e) => {
     }
 };
 
-// --- Authentication & Sessions (OTP Flow) ---
-let verifyingPhone = "";
+// --- Authentication & Sessions (Username/Password) ---
+
+window.toggleAuthForms = (e) => {
+    e.preventDefault();
+    const loginForm = document.getElementById('authLoginForm');
+    const regForm = document.getElementById('authRegisterForm');
+
+    if (loginForm.style.display === 'none') {
+        loginForm.style.display = 'block';
+        regForm.style.display = 'none';
+    } else {
+        loginForm.style.display = 'none';
+        regForm.style.display = 'block';
+    }
+    // Clear messages
+    document.getElementById('loginMessage').style.display = 'none';
+    document.getElementById('regMessage').style.display = 'none';
+};
 
 window.openAuthModal = (e) => {
     if (e) e.preventDefault();
@@ -324,93 +340,36 @@ window.openAuthModal = (e) => {
     }
 
     // Reset forms
-    document.getElementById('authPhoneForm').style.display = 'block';
-    document.getElementById('authVerifyForm').style.display = 'none';
-    document.getElementById('authPhoneForm').reset();
-    document.getElementById('authVerifyForm').reset();
-    document.getElementById('otpMessage').style.display = 'none';
+    document.getElementById('authLoginForm').style.display = 'block';
+    document.getElementById('authRegisterForm').style.display = 'none';
+    document.getElementById('authLoginForm').reset();
+    document.getElementById('authRegisterForm').reset();
+    document.getElementById('loginMessage').style.display = 'none';
+    document.getElementById('regMessage').style.display = 'none';
 
     document.getElementById('authModal').classList.add('active');
-
-    // Setup generic input jumping for OTP
-    const otps = document.querySelectorAll('.otp-digit');
-    otps.forEach((input, index) => {
-        input.addEventListener('keyup', (e) => {
-            if (e.key >= 0 && e.key <= 9) {
-                if (index < otps.length - 1) otps[index + 1].focus();
-            } else if (e.key === 'Backspace') {
-                if (index > 0) otps[index - 1].focus();
-            }
-        });
-    });
 };
 
 window.closeAuthModal = () => document.getElementById('authModal').classList.remove('active');
 
-window.editPhoneNumber = (e) => {
+// Step 1: Login
+document.getElementById('authLoginForm').addEventListener('submit', async (e) => {
     e.preventDefault();
-    document.getElementById('authPhoneForm').style.display = 'block';
-    document.getElementById('authVerifyForm').style.display = 'none';
-};
+    const phone = document.getElementById('loginPhone').value.trim();
+    const password = document.getElementById('loginPassword').value.trim();
 
-// Step 1: Send OTP
-document.getElementById('authPhoneForm').addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const name = document.getElementById('authName').value.trim();
-    const phone = document.getElementById('authPhone').value.trim();
+    const msg = document.getElementById('loginMessage');
+    const btn = document.getElementById('authLoginBtn');
 
-    document.getElementById('authSendOtpBtn').disabled = true;
-    document.getElementById('otpMessage').style.display = 'block';
+    btn.disabled = true;
+    btn.innerText = "Processing...";
+    msg.style.display = 'none';
 
     try {
-        const res = await fetch(`${API_BASE}/send-otp`, {
+        const res = await fetch(`${API_BASE}/login`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ phone, name })
-        });
-
-        if (res.ok) {
-            verifyingPhone = phone;
-            document.getElementById('verifyingPhoneLabel').innerText = phone;
-            document.getElementById('authPhoneForm').style.display = 'none';
-            document.getElementById('authVerifyForm').style.display = 'block';
-            document.getElementById('otp1').focus();
-        } else {
-            const data = await res.json();
-            alert(data.error || "Failed to send OTP.");
-        }
-    } catch (err) {
-        alert("Network error.");
-    } finally {
-        document.getElementById('authSendOtpBtn').disabled = false;
-        document.getElementById('otpMessage').style.display = 'none';
-    }
-});
-
-// Step 2: Verify OTP
-document.getElementById('authVerifyForm').addEventListener('submit', async (e) => {
-    e.preventDefault();
-
-    const otp = [
-        document.getElementById('otp1').value,
-        document.getElementById('otp2').value,
-        document.getElementById('otp3').value,
-        document.getElementById('otp4').value
-    ].join('');
-
-    if (otp.length < 4) {
-        alert("Please enter the 4-digit OTP.");
-        return;
-    }
-
-    document.getElementById('authVerifyBtn').disabled = true;
-    document.getElementById('authVerifyBtn').innerText = "Verifying...";
-
-    try {
-        const res = await fetch(`${API_BASE}/verify-otp`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ phone: verifyingPhone, otp })
+            body: JSON.stringify({ phone, password })
         });
 
         const data = await res.json();
@@ -418,15 +377,58 @@ document.getElementById('authVerifyForm').addEventListener('submit', async (e) =
             localStorage.setItem('canteenUser', JSON.stringify(data.user));
             closeAuthModal();
             renderAuthUI();
-            alert(`Welcome, ${data.user.name}!`);
+            alert(`Welcome back, ${data.user.name}!`);
         } else {
-            alert(data.error || "Authentication failed.");
+            msg.innerText = data.error || "Login failed.";
+            msg.style.display = 'block';
         }
     } catch (err) {
-        alert("Network error.");
+        msg.innerText = "Network error. Server might be down.";
+        msg.style.display = 'block';
     } finally {
-        document.getElementById('authVerifyBtn').disabled = false;
-        document.getElementById('authVerifyBtn').innerText = "Verify & Login";
+        btn.disabled = false;
+        btn.innerText = "Login";
+    }
+});
+
+// Step 2: Register
+document.getElementById('authRegisterForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const name = document.getElementById('regName').value.trim();
+    const phone = document.getElementById('regPhone').value.trim();
+    const password = document.getElementById('regPassword').value.trim();
+
+    const msg = document.getElementById('regMessage');
+    const btn = document.getElementById('authRegBtn');
+
+    btn.disabled = true;
+    btn.innerText = "Processing...";
+    msg.style.display = 'none';
+
+    try {
+        const res = await fetch(`${API_BASE}/register`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ name, phone, password })
+        });
+
+        const data = await res.json();
+        if (res.ok) {
+            localStorage.setItem('canteenUser', JSON.stringify(data.user));
+            closeAuthModal();
+            renderAuthUI();
+            alert(`Account created! Welcome, ${data.user.name}!`);
+        } else {
+            msg.innerText = data.error || "Registration failed.";
+            msg.style.display = 'block';
+        }
+    } catch (err) {
+        msg.innerText = "Network error. Server might be down.";
+        msg.style.display = 'block';
+    } finally {
+        btn.disabled = false;
+        btn.innerText = "Create Account";
     }
 });
 

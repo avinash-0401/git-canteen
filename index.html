@@ -183,9 +183,6 @@
                 <h2 class="gradient-text">Order Receipt</h2>
                 <button class="close-modal" onclick="closeReceipt()">&times;</button>
             </div>
-            <div id="receiptContent" style="margin-bottom: 24px; padding-top: 10px;"></div>
-            <button class="btn btn-primary btn-glow" style="width: 100%; justify-content: center;"
-                onclick="openTrackOrder()">Track Order Status</button>
         </div>
     </div>
 
@@ -236,54 +233,67 @@
                 <button class="close-modal" onclick="closeAuthModal()">&times;</button>
             </div>
 
-            <!-- STEP 1: Phone Number -->
-            <form id="authPhoneForm" class="auth-step active-step">
-                <p class="text-muted mb-4">Enter your details to receive an OTP.</p>
+            <!-- STEP 1: Login Form -->
+            <form id="authLoginForm" class="auth-step active-step">
+                <p class="text-muted mb-4">Login to track your orders.</p>
 
                 <div class="form-group slide-up">
-                    <label>Full Name</label>
-                    <input type="text" id="authName" required placeholder="Your Name">
+                    <label>Phone Number</label>
+                    <input type="tel" id="loginPhone" required pattern="[0-9]{10}" placeholder="10-digit number">
                 </div>
 
                 <div class="form-group slide-up" style="animation-delay: 0.1s;">
-                    <label>Phone Number</label>
-                    <input type="tel" id="authPhone" required pattern="[0-9]{10}" placeholder="10-digit number">
+                    <label>Password</label>
+                    <input type="password" id="loginPassword" required placeholder="Enter password">
                 </div>
 
-                <div id="otpMessage"
-                    style="display:none; color: var(--primary-red); font-weight: 500; text-align: center; margin-bottom: 15px;"
-                    class="slide-up">
-                    <span class="loading-spinner"></span> Sending OTP...
+                <div id="loginMessage"
+                    style="display:none; color: var(--primary-red); font-weight: 500; text-align: center; margin-bottom: 15px;">
                 </div>
 
-                <button type="submit" class="btn btn-primary btn-glow slide-up" id="authSendOtpBtn"
+                <button type="submit" class="btn btn-primary btn-glow slide-up" id="authLoginBtn"
                     style="width: 100%; justify-content: center; animation-delay: 0.2s;">
-                    Get OTP
+                    Login
                 </button>
+
+                <div style="text-align: center; margin-top: 15px;" class="slide-up">
+                    <a href="#" onclick="toggleAuthForms(event)"
+                        style="color: var(--primary-red); font-size: 0.9em;">Don't have an account? Create one!</a>
+                </div>
             </form>
 
-            <!-- STEP 2: Verify OTP -->
-            <form id="authVerifyForm" class="auth-step" style="display: none;">
-                <p class="text-muted mb-4 text-center">We've sent a 4-digit code to <br><strong id="verifyingPhoneLabel"
-                        style="color:var(--dark-brown);"></strong></p>
+            <!-- STEP 2: Register Form -->
+            <form id="authRegisterForm" class="auth-step" style="display: none;">
+                <p class="text-muted mb-4 text-center">Create a new account</p>
 
-                <div class="otp-inputs mt-4 mb-4">
-                    <input type="text" class="otp-digit" maxlength="1" id="otp1" required>
-                    <input type="text" class="otp-digit" maxlength="1" id="otp2" required>
-                    <input type="text" class="otp-digit" maxlength="1" id="otp3" required>
-                    <input type="text" class="otp-digit" maxlength="1" id="otp4" required>
+                <div class="form-group slide-up">
+                    <label>Full Name</label>
+                    <input type="text" id="regName" required placeholder="Your Name">
                 </div>
 
-                <div style="text-align: center; margin-bottom: 20px;">
-                    <a href="#" onclick="editPhoneNumber(event)"
-                        style="color: var(--primary-red); font-size: 0.9em; text-decoration: underline;">Change Phone
-                        Number</a>
+                <div class="form-group slide-up">
+                    <label>Phone Number</label>
+                    <input type="tel" id="regPhone" required pattern="[0-9]{10}" placeholder="10-digit number">
                 </div>
 
-                <button type="submit" class="btn btn-primary btn-glow" id="authVerifyBtn"
+                <div class="form-group slide-up">
+                    <label>Password</label>
+                    <input type="password" id="regPassword" required placeholder="Create password">
+                </div>
+
+                <div id="regMessage"
+                    style="display:none; color: var(--primary-red); font-weight: 500; text-align: center; margin-bottom: 15px;">
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-glow" id="authRegBtn"
                     style="width: 100%; justify-content: center;">
-                    Verify & Login
+                    Create Account
                 </button>
+
+                <div style="text-align: center; margin-top: 15px;">
+                    <a href="#" onclick="toggleAuthForms(event)"
+                        style="color: var(--primary-red); font-size: 0.9em;">Already have an account? Login!</a>
+                </div>
             </form>
         </div>
     </div>
