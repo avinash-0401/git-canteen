@@ -491,7 +491,7 @@ window.openMyOrders = async (e) => {
     container.innerHTML = '<p style="text-align: center; color: #666;">Loading orders...</p>';
 
     try {
-        const res = await fetch(`http://localhost:3000/api/user/orders?user_id=${user.user_id}`);
+        const res = await fetch(`${API_BASE}/user/orders?user_id=${user.user_id}`);
         const orders = await res.json();
 
         if (orders.length === 0) {
