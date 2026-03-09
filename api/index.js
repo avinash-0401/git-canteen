@@ -84,7 +84,8 @@ module.exports = async (req, res) => {
     });
 
     const sendJson = (status, data) => {
-        res.writeHead(status, { 'Content-Type': 'application/json' });
+        res.statusCode = status;
+        res.setHeader('Content-Type', 'application/json');
         res.end(JSON.stringify(data));
     };
 

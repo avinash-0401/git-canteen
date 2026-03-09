@@ -351,6 +351,14 @@
   "settings": {
     "is_canteen_open": "true"
   },
-  "users": [],
+  "users": [
+    {
+      "user_id": "user_1773075359315",
+      "name": "Alice",
+      "phone": "1112223334",
+      "password": "password123",
+      "created_at": "2026-03-09T16:55:59.315Z"
+    }
+  ],
   "otps": {}
 }
