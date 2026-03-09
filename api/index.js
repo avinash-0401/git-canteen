@@ -4,7 +4,7 @@ const path = require('path');
 const crypto = require('crypto');
 
 const PORT = 3000;
-const DB_FILE = path.join(__dirname, 'canteen.json');
+const DB_FILE = process.env.VERCEL || process.env.VERCEL_ENV ? path.join('/tmp', 'canteen.json') : path.join(__dirname, 'canteen.json');
 
 // Memory DB with persistent flush
 let db = {
@@ -27,7 +27,11 @@ if (!fs.existsSync(DB_FILE)) {
         { id: 5, name: 'Coffee', category: 'Beverages', description: 'Hot and energizing', price: 15, is_available: 1 },
         { id: 6, name: 'Cream Cakes', category: 'Bakery & Desserts', description: 'Sweet treat for breaks', price: 25, is_available: 1 }
     ];
-    fs.writeFileSync(DB_FILE, JSON.stringify(db, null, 2));
+    try {
+        fs.writeFileSync(DB_FILE, JSON.stringify(db, null, 2));
+    } catch (e) {
+        console.error("Failed to seed initial DB", e);
+    }
 } else {
     try {
         const rawData = fs.readFileSync(DB_FILE, 'utf8');
