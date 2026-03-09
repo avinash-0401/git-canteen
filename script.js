@@ -353,7 +353,7 @@ window.openAuthModal = (e) => {
 
 window.closeAuthModal = () => document.getElementById('authModal').classList.remove('active');
 
-// Step 1: Login
+// Step 1:// Login
 document.getElementById('authLoginForm').addEventListener('submit', async (e) => {
     e.preventDefault();
     const phone = document.getElementById('loginPhone').value.trim();
@@ -363,7 +363,7 @@ document.getElementById('authLoginForm').addEventListener('submit', async (e) =>
     const btn = document.getElementById('authLoginBtn');
 
     btn.disabled = true;
-    btn.innerText = "Processing...";
+    btn.innerText = "Logging in...";
     msg.style.display = 'none';
 
     try {
@@ -377,13 +377,14 @@ document.getElementById('authLoginForm').addEventListener('submit', async (e) =>
             localStorage.setItem('canteenUser', JSON.stringify(data.user));
             closeAuthModal();
             renderAuthUI();
-            alert(`Welcome back, ${data.user.name}!`);
+            alert(`Welcome, ${data.user.name}!`);
         } else {
             msg.innerText = data.error || "Login failed.";
             msg.style.display = 'block';
         }
     } catch (err) {
-        msg.innerText = "Network error.";
+        console.error("Login fetch error:", err);
+        msg.innerText = "Network error: API unreachable.";
         msg.style.display = 'block';
     } finally {
         btn.disabled = false;
@@ -391,7 +392,7 @@ document.getElementById('authLoginForm').addEventListener('submit', async (e) =>
     }
 });
 
-// Step 2: Register
+// Step 2:// Register
 document.getElementById('authRegisterForm').addEventListener('submit', async (e) => {
     e.preventDefault();
 
@@ -403,7 +404,7 @@ document.getElementById('authRegisterForm').addEventListener('submit', async (e)
     const btn = document.getElementById('authRegBtn');
 
     btn.disabled = true;
-    btn.innerText = "Processing...";
+    btn.innerText = "Registering...";
     msg.style.display = 'none';
 
     try {
@@ -417,13 +418,14 @@ document.getElementById('authRegisterForm').addEventListener('submit', async (e)
             localStorage.setItem('canteenUser', JSON.stringify(data.user));
             closeAuthModal();
             renderAuthUI();
-            alert(`Account created! Welcome, ${data.user.name}!`);
+            alert(`Welcome, ${data.user.name}!`);
         } else {
             msg.innerText = data.error || "Registration failed.";
             msg.style.display = 'block';
         }
     } catch (err) {
-        msg.innerText = "Network error.";
+        console.error("Register fetch error:", err);
+        msg.innerText = "Network error: API unreachable.";
         msg.style.display = 'block';
     } finally {
         btn.disabled = false;
