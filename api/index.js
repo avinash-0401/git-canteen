@@ -71,6 +71,10 @@ module.exports = async (req, res) => {
 
     // Helper to parse JSON body
     const getBody = () => new Promise(resolve => {
+        if (req.body) {
+            // Vercel serverless automatically parses JSON bodies
+            return resolve(typeof req.body === 'string' ? JSON.parse(req.body) : req.body);
+        }
         let body = '';
         req.on('data', chunk => { body += chunk.toString(); });
         req.on('end', () => {
