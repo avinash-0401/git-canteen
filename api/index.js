@@ -82,21 +82,23 @@ module.exports = async (req, res) => {
 
     const url = new URL(req.url, `http://${req.headers.host}`);
     const pathname = url.pathname;
+    const routeParam = url.searchParams.get('route');
+    const apiPath = routeParam ? `/api/${routeParam}` : pathname;
 
     // --- ROUTES ---
 
     // PUBLIC: Get available items
-    if (req.method === 'GET' && pathname === '/api/items') {
+    if (req.method === 'GET' && apiPath === '/api/items') {
         return sendJson(200, db.items.filter(i => i.is_available === 1));
     }
 
     // ADMIN: Get all items
-    if (req.method === 'GET' && pathname === '/api/admin/items') {
+    if (req.method === 'GET' && apiPath === '/api/admin/items') {
         return sendJson(200, db.items);
     }
 
     // ADMIN: Create item
-    if (req.method === 'POST' && pathname === '/api/admin/items') {
+    if (req.method === 'POST' && apiPath === '/api/admin/items') {
         const data = await getBody();
         const newItem = {
             id: Date.now(),
@@ -113,8 +115,8 @@ module.exports = async (req, res) => {
     }
 
     // ADMIN: Delete item
-    if (req.method === 'DELETE' && pathname.startsWith('/api/admin/items/')) {
-        const idStr = pathname.split('/').pop();
+    if (req.method === 'DELETE' && apiPath.startsWith('/api/admin/items/')) {
+        const idStr = apiPath.split('/').pop();
         if (idStr) {
             db.items = db.items.filter(i => i.id.toString() !== idStr);
             saveDb();
@@ -123,7 +125,7 @@ module.exports = async (req, res) => {
     }
 
     // PUBLIC: Create order (Pending Payment state)
-    if (req.method === 'POST' && pathname === '/api/orders') {
+    if (req.method === 'POST' && apiPath === '/api/orders') {
         const data = await getBody();
         const newOrder = {
             id: Date.now(),
@@ -143,7 +145,7 @@ module.exports = async (req, res) => {
     }
 
     // POST: /api/create-payment (Simulate Gateway Intent)
-    if (req.method === 'POST' && pathname === '/api/create-payment') {
+    if (req.method === 'POST' && apiPath === '/api/create-payment') {
         const data = await getBody();
         const { order_id, amount } = data;
         if (!order_id) return sendJson(400, { error: 'Order ID is required' });
@@ -160,7 +162,7 @@ module.exports = async (req, res) => {
     }
 
     // POST: /api/verify-payment (Simulate Gateway Verification)
-    if (req.method === 'POST' && pathname === '/api/verify-payment') {
+    if (req.method === 'POST' && apiPath === '/api/verify-payment') {
         const data = await getBody();
         const { order_id, transaction_id } = data;
         if (!order_id || !transaction_id) {
@@ -180,20 +182,20 @@ module.exports = async (req, res) => {
     }
 
     // PUBLIC: Get specific order by ID
-    if (req.method === 'GET' && pathname.match(/^\/api\/orders\/\d+$/)) {
-        const idStr = pathname.split('/').pop();
+    if (req.method === 'GET' && apiPath.match(/^\/api\/orders\/\d+$/)) {
+        const idStr = apiPath.split('/').pop();
         const order = db.orders.find(o => o.id.toString() === idStr);
         if (order) return sendJson(200, order);
         return sendJson(404, { error: 'Order not found' });
     }
 
     // ADMIN: Get all orders
-    if (req.method === 'GET' && pathname === '/api/admin/orders') {
+    if (req.method === 'GET' && apiPath === '/api/admin/orders') {
         return sendJson(200, db.orders);
     }
 
     // USER: Register
-    if (req.method === 'POST' && pathname === '/api/register') {
+    if (req.method === 'POST' && apiPath === '/api/register') {
         const data = await getBody();
         const { name, phone, password } = data;
         if (!name || !phone || !password) {
@@ -219,7 +221,7 @@ module.exports = async (req, res) => {
     }
 
     // USER: Login
-    if (req.method === 'POST' && pathname === '/api/login') {
+    if (req.method === 'POST' && apiPath === '/api/login') {
         const data = await getBody();
         const { phone, password } = data;
         if (!phone || !password) {
@@ -236,7 +238,7 @@ module.exports = async (req, res) => {
     }
 
     // USER: Get their orders
-    if (req.method === 'GET' && pathname === '/api/user/orders') {
+    if (req.method === 'GET' && apiPath === '/api/user/orders') {
         const phone = url.searchParams.get('phone');
         if (!phone) return sendJson(400, { error: 'Missing phone number' });
         const userOrders = db.orders.filter(o => o.customer_phone === phone);
@@ -244,14 +246,14 @@ module.exports = async (req, res) => {
     }
 
     // CHEF: Get live orders
-    if (req.method === 'GET' && pathname === '/api/chef/orders') {
+    if (req.method === 'GET' && apiPath === '/api/chef/orders') {
         const liveOrders = db.orders.filter(o => o.order_status !== 'Completed');
         return sendJson(200, liveOrders);
     }
 
     // CHEF: Update order status
-    if (req.method === 'PUT' && pathname.match(/\/api\/chef\/orders\/\d+\/status/)) {
-        const idStr = pathname.split('/')[4];
+    if (req.method === 'PUT' && apiPath.match(/\/api\/chef\/orders\/\d+\/status/)) {
+        const idStr = apiPath.split('/')[4];
         const data = await getBody();
         const order = db.orders.find(o => o.id.toString() === idStr);
         if (order && data.order_status) {
